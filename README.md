@@ -20,3 +20,59 @@ PasswordEncoder passwordEncoder =
 - Pbkdf2PasswordEncoder
 - ScryptPasswordEncoder
 - StandardPasswordEncoder
+
+## Spring Web Mock Mvc Test
+<code>@AutoConfigureMockMvc</code> 를 사용하면 MockMvc 테스트를 진행할 수 있다
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+public class SpringBootTest {
+
+}
+```
+
+### Anonymous, User, Admin Test
+
+#### Anonymous
+```java
+@Test
+@WithAnonymousUser
+public void index_anonymous() throws Exception {
+    mockMvc.perform(get(INDEX_PAGE))
+        .andDo(print())
+        .andExpect(status().isOk());
+}
+```
+
+#### User
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@WithMockUser(username = "user", roles="USER")
+public @interface WithNormalUser {
+}
+
+@Test
+@WithNormalUser
+public void index_user() throws Exception {
+    mockMvc.perform(get(INDEX_PAGE))
+        .andDo(print())
+        .andExpect(status().isOk());
+}
+```
+
+#### Admin
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@WithMockUser(username = "admin", roles="ADMIN")
+public @interface WithAdminUser {
+}
+
+@Test
+@WithAdminUser
+public void admin_admin() throws Exception {
+    mockMvc.perform(get(ADMIN_PAGE))
+        .andDo(print())
+        .andExpect(status().isOk());
+}
+```
