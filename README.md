@@ -97,5 +97,48 @@ Collection<? extends GrantedAuthority> authorities = authentication.getAuthoriti
 boolean authenticated = authentication.isAuthenticated();
 ```
 
-> UserDetailsService 클래스는 DAO로 사용자 장보를 가져오는 작업을 수행한다. 실제 인증은 AuthenticationManager 인터페이스가
+> UserDetailsService 클래스는 DAO로 사용자 정보를 가져오는 작업을 수행한다. 실제 인증은 AuthenticationManager 인터페이스가
 수행한다.
+
+## AuthenticationManager와 Authentication
+- 스프링 시큐리티에서 인증은 [AuthenticationManager](https://docs.spring.io/spring-security/site/docs/current/api/org/springframework/security/authentication/AuthenticationManager.html)가 수행
+- SecurityContext는 인증 정보를 갖고 있음
+- 대부분 AuthenticationManager 인터페이스를 구현한 <code>ProviderManager</code> 구현체 클래스를 사용한다 
+
+```java
+public interface AuthenticationManager {
+
+	Authentication authenticate(Authentication authentication)
+			throws AuthenticationException;
+}
+```
+
+### DaoAuthenticationProvider
+- UsernamePasswordAuthenticationToken은 DaoAuthenticationProvider가 인증하는 작업을 처리
+- UserDetailsService 인터페이스를 구현한 클래스의 <code>loadUserByUsername</code> 메서드를 호출
+- AccountService 클래스의 loadUserByUsername 메서드는 <b>User 객체를 반환</b>
+- User 클래스는 UserDetails 인터페이스를 구현한 구체 클래스
+
+![DaoAuthenticationProvider](https://user-images.githubusercontent.com/43853352/63638601-7aa4fa00-c6c5-11e9-84f4-aeed7b5a2205.png)
+
+```java
+public class AccountService implements UserDetailsService {
+
+    @Autowired
+    AccountRepository accountRepository;
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Account account = accountRepository.findByUsername(username);
+        if (account == null) {
+            throw new UsernameNotFoundException(username);
+        }
+
+        return User.builder()
+                .username(account.getUsername())
+                .password(account.getPassword())
+                .roles(account.getRole())
+                .build();
+    }
+}
+```
