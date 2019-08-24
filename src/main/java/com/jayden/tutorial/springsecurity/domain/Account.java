@@ -1,6 +1,7 @@
 package com.jayden.tutorial.springsecurity.domain;
 
 import lombok.Getter;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 
@@ -24,17 +25,17 @@ public class Account {
     }
 
     private void setEncodePassword(String password) {
-        this.password = "{noop}" + password;
+        this.password = password;
     }
 
     private void setRole(String role) {
         this.role = role;
     }
 
-    public static Account of(String username, String password, String role) {
+    public static Account of(String username, String password, String role, PasswordEncoder passwordEncoder) {
         Account account = new Account();
         account.setUsername(username);
-        account.setEncodePassword(password);
+        account.setEncodePassword(passwordEncoder.encode(password));
         account.setRole(role);
         return account;
     }
