@@ -9,6 +9,9 @@ import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.unauthenticated;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -54,6 +57,24 @@ public class AccountControllerTest {
         mockMvc.perform(get(ADMIN_PAGE))
             .andDo(print())
             .andExpect(status().isOk());
+    }
+
+    @Test
+    public void login_success() throws Exception {
+        String username = "user";
+        String password = "123";
+
+        mockMvc.perform(formLogin().user(username).password(password))
+                .andExpect(authenticated());
+    }
+
+    @Test
+    public void login_fail() throws Exception {
+        String username = "user";
+        String password = "123456";
+
+        mockMvc.perform(formLogin().user(username).password(password))
+                .andExpect(unauthenticated());
     }
 
 }
