@@ -165,3 +165,16 @@ public class AccountContext {
 
 }
 ```
+
+## SecurityContextHolder에 Authentication 정보를 제공하는 필터
+1. UsernamePasswordAuthenticationFilter
+    - <code>AuthenticationManager</code>를 이용해서 사용자가 입력한 로그인 정보(이름, 비밀번호)를 인증
+    ![UsernamePasswordAuthenticationFilter](https://user-images.githubusercontent.com/43853352/63639189-7d0a5280-c6cb-11e9-9424-2faab365de40.png)
+    - 인증에 성공하면 <code>successfulAuthentication</code> 메서드를 호출
+    - SecurityContextHolder의 SecurityContext에 인증 정보를 저장
+    ![AbstractAuthenticationProcessingFilter](https://user-images.githubusercontent.com/43853352/63639251-f609aa00-c6cb-11e9-8e25-e1b8acd4adac.png)
+    
+2. SecurityContextPersistenceFilter
+    - <code>HttpSessionSecurityContextRepository</code> 저장소를 통해 SecurityContext 정보를 가져온다
+    - 기본 전략으로 Http 세션에 저장하고 복원한다
+    - Repository에서 가져온 SecurityContext 정보를 다시 SecurityContextHolder에 넣어 준다
