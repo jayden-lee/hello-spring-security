@@ -178,3 +178,46 @@ public class AccountContext {
     - <code>HttpSessionSecurityContextRepository</code> 저장소를 통해 SecurityContext 정보를 가져온다
     - 기본 전략으로 Http 세션에 저장하고 복원한다
     - Repository에서 가져온 SecurityContext 정보를 다시 SecurityContextHolder에 넣어 준다
+    
+## 스프링 시큐리티 Filter와 FilterChainProxy
+- FilterChainProxy는 요청(HttpServletRequest)에 따라 적합한 <code>SecurityFilterChain</code>을 사용
+- 기본 전략으로 <code>DefaultSecurityFilterChain</code>을 사용
+- <code>DefaultSecurityFilterChain</code>는 Filter 리스트를 가지고 있다
+- SecurityFilterChain을 여러개 만들고 싶으면 SecurityConfig 클래스를 여러개 만든다
+    - 이 때 SecurityConfig가 상충할 수 있으니 Order 어노테이션을 통해 우선순위를 지정한다
+- Filter 개수는 SecurityConfig 설정에 따라 달라진다   
+- FilterChainProxy는 필터를 호출하고 실행한다
+
+1. WebAsyncManagerIntergrationFilter
+2. <b>SecurityContextPersistenceFilter</b>
+3. HeaderWriterFilter
+4. CsrfFilter
+5. LogoutFilter
+6. <b>UsernamePasswordAuthenticationFilter</b>
+7. DefaultLoginPageGeneratingFilter
+8. DefaultLogoutPageGeneratingFilter
+9. BasicAuthenticationFilter
+10. RequestCacheAwareFtiler
+11. SecurityContextHolderAwareReqeustFilter
+12. AnonymouseAuthenticationFilter
+13. SessionManagementFilter
+14. ExeptionTranslationFilter
+15. FilterSecurityInterceptor
+
+```java
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http.authorizeRequests()
+            .mvcMatchers("/", "/info").permitAll()
+            .mvcMatchers("/admin").hasRole("ADMIN")
+            .anyRequest().authenticated();
+        http.formLogin();
+        http.httpBasic();
+    }
+
+}
+```
