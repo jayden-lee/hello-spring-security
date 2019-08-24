@@ -1,11 +1,13 @@
-package com.jayden.tutorial.springsecurity.domain;
+package com.jayden.tutorial.springsecurity.domain.account;
 
+import com.jayden.tutorial.springsecurity.domain.account.infra.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class AccountService implements UserDetailsService {
@@ -27,6 +29,7 @@ public class AccountService implements UserDetailsService {
                 .build();
     }
 
+    @Transactional
     public void newAccount(Account account) {
         accountRepository.save(account);
     }

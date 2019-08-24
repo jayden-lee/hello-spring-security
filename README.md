@@ -7,7 +7,7 @@
 
 
 ## Password Encoder
-비밀번호는 평문이 아닌 단방향 알고리즘으로 인코딩해서 저장해야 한다.
+비밀번호는 평문이 아닌 단방향 알고리즘으로 인코딩해서 저장해야 한다
 - {id}encodePassword
 ```java
 PasswordEncoder passwordEncoder = 
@@ -76,3 +76,26 @@ public void admin_admin() throws Exception {
         .andExpect(status().isOk());
 }
 ```
+
+## SecurityContextHolder와 Authentication
+- SecurityContext 제공
+- 하나의 Thread에서 Authentication 공유하기 위해서 ThreadLocal 사용
+- <code>Authentication</code>는 <b>Principal</b>과 <b>GrantAuthority</b> 제공
+    - Principal은 사용자에 대한 정보
+    - GrantAuthority는 권한 정보 (인가 및 권한 확인할 때 사용)
+    
+```java
+Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+// 사용자 정보
+Object principal = authentication.getPrincipal();
+
+// 사용자 권한
+Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
+
+// 인증 여부
+boolean authenticated = authentication.isAuthenticated();
+```
+
+> UserDetailsService 클래스는 DAO로 사용자 장보를 가져오는 작업을 수행한다. 실제 인증은 AuthenticationManager 인터페이스가
+수행한다.

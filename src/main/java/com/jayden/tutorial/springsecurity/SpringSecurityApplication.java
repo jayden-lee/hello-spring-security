@@ -1,8 +1,7 @@
 package com.jayden.tutorial.springsecurity;
 
-import com.jayden.tutorial.springsecurity.domain.Account;
-import com.jayden.tutorial.springsecurity.domain.AccountRepository;
-import com.jayden.tutorial.springsecurity.domain.AccountService;
+import com.jayden.tutorial.springsecurity.domain.account.Account;
+import com.jayden.tutorial.springsecurity.domain.account.AccountService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

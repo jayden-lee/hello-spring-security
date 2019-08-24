@@ -1,4 +1,4 @@
-package com.jayden.tutorial.springsecurity.domain;
+package com.jayden.tutorial.springsecurity.domain.account;
 
 import lombok.Getter;
 import org.springframework.security.crypto.password.PasswordEncoder;
