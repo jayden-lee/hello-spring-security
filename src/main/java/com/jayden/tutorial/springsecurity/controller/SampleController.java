@@ -1,5 +1,7 @@
 package com.jayden.tutorial.springsecurity.controller;
 
+import com.jayden.tutorial.springsecurity.domain.account.AccountContext;
+import com.jayden.tutorial.springsecurity.domain.account.infra.AccountRepository;
 import com.jayden.tutorial.springsecurity.domain.sample.SampleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -13,6 +15,9 @@ public class SampleController {
 
     @Autowired
     private SampleService sampleService;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     @GetMapping(value = "/")
     public String index(Model model, Principal principal) {
@@ -33,6 +38,7 @@ public class SampleController {
     @GetMapping(value = "/dashboard")
     public String dashboard(Model model, Principal principal) {
         model.addAttribute("message", "Hello " + principal.getName());
+        AccountContext.setAccount(accountRepository.findByUsername(principal.getName()));
         sampleService.dashboard();
         return "dashboard";
     }

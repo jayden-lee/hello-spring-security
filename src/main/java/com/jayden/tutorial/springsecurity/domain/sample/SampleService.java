@@ -1,20 +1,17 @@
 package com.jayden.tutorial.springsecurity.domain.sample;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import com.jayden.tutorial.springsecurity.domain.account.Account;
+import com.jayden.tutorial.springsecurity.domain.account.AccountContext;
 import org.springframework.stereotype.Service;
-
-import java.util.Collection;
 
 @Service
 public class SampleService {
 
     public void dashboard() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Object principal = authentication.getPrincipal();
-        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-        boolean authenticated = authentication.isAuthenticated();
+        // SecurityContextHolder에서 SecurityContext를 꺼낸 것처럼 사용
+        Account account = AccountContext.getAccount();
+        System.out.println("=========================");
+        System.out.println(account);
     }
 
 }
