@@ -288,3 +288,13 @@ public AccessDecisionManager accessDecisionManager() {
     return new AffirmativeBased(voters);
 }
 ```
+
+## FilterSecurityInterceptor
+- FilterChainProxy가 호출하는 시큐리티 필터 목록 중에 하나이며, 대부분 가장 마지막에 위치함
+- 인증이 된 상태에서 특정 리소스에 접근할 수 있는지 Role을 확인함
+- <code>AccessDecisionManager</code>를 사용해서 Access Control 또는 예외 처리하는 필터 
+
+### AbstractSecurityInterceptor
+- FilterSecurityInterceptor 클래스의 부모 클래스
+ 
+![AbstractSecurityInterceptor](https://user-images.githubusercontent.com/43853352/63650312-404e6200-c784-11e9-9d42-cfd02d6e840e.png)
