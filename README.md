@@ -197,7 +197,7 @@ public class AccountContext {
 7. DefaultLoginPageGeneratingFilter
 8. DefaultLogoutPageGeneratingFilter
 9. BasicAuthenticationFilter
-10. RequestCacheAwareFtiler
+10. RequestCacheAwareFilter
 11. SecurityContextHolderAwareReqeustFilter
 12. AnonymouseAuthenticationFilter
 13. SessionManagementFilter
@@ -298,3 +298,16 @@ public AccessDecisionManager accessDecisionManager() {
 - FilterSecurityInterceptor 클래스의 부모 클래스
  
 ![AbstractSecurityInterceptor](https://user-images.githubusercontent.com/43853352/63650312-404e6200-c784-11e9-9d42-cfd02d6e840e.png)
+
+## ExceptionTranslationFilter
+- 필터 체인에서 발생하는 <code>AccessDeniedException</code>과 <code>AuthenticationException</code>을 처리하는 필터
+
+![ExceptionTranslationFilter](https://user-images.githubusercontent.com/43853352/63650539-8b697480-c786-11e9-86eb-c6d870bf83e4.png)
+
+### AuthenticationException
+- 인증에 실패할 때 발생하는 예외
+- AbstractSecurityInterceptor 하위 클래스에서 발생하는 예외만 처리
+
+### AccessDeniedException
+- 익명 사용자라면 AuthenticationEntryPoint 실행 (로그인 페이지로 이동)
+- 익명 사용자가 아니라면 AccessDeniedHandler에게 위임
