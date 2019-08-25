@@ -221,3 +221,27 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 }
 ```
+
+## DelegatingFilterProxy
+- 일반적인 서블릿 필터
+- 서블릿 필터 처리를 스프링에 들어있는 빈으로 위임하고 싶을 때 사용하는 서블릿 필터
+- 타겟 빈 이름을 설정
+- 스프링 부트(자동 설정) 없이 스프링 시큐리티 설정할 때는 <code>AbstractSecurityWebApplicationInitializer</code>를
+사용해서 등록
+- 스프링 부트를 사용할 때는 자동으로 등록 (<code>SecurityFilterAutoConfiguration</code>)
+- <code>FilterChainProxy</code>는 <b>springSecurityFilterChain</b> 이름으로 빈 등록
+
+```java
+public abstract class AbstractSecurityWebApplicationInitializer
+		implements WebApplicationInitializer {
+
+	private static final String SERVLET_CONTEXT_PREFIX = "org.springframework.web.servlet.FrameworkServlet.CONTEXT.";
+
+	public static final String DEFAULT_FILTER_NAME = "springSecurityFilterChain";
+
+    ...
+}
+```
+
+![SecurityFilterAutoConfiguration](https://user-images.githubusercontent.com/43853352/63649912-9c15ec80-c77e-11e9-82c7-70af9c04ba91.png)
+
