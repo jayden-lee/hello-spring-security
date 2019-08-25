@@ -245,3 +245,46 @@ public abstract class AbstractSecurityWebApplicationInitializer
 
 ![SecurityFilterAutoConfiguration](https://user-images.githubusercontent.com/43853352/63649912-9c15ec80-c77e-11e9-82c7-70af9c04ba91.png)
 
+## AccessDecisionManager
+Access Control 결정을 내리는 인터페이스, 구현체 3가지를 기본으로 제공한다
+- AffirmativeBased : 여러 Voter 중에 한 명이라도 허용하면 인가 (기본 전략) 
+- ConsensusBased : 다수결
+- UnanimousBased : 만장일치
+
+```java
+public interface AccessDecisionManager {
+
+	void decide(Authentication authentication, Object object,
+			Collection<ConfigAttribute> configAttributes) throws AccessDeniedException,
+			InsufficientAuthenticationException;
+
+	boolean supports(ConfigAttribute attribute);
+
+
+	boolean supports(Class<?> clazz);
+}
+```
+
+## AccessDecisionVoter
+- Authentication이 특정한 Object에 접근할 때 필요한 ConfigAttribute를 만족하는지 확인
+- WebExpressionVoter : 웹 시큐리티에서 사용하는 기본 구현체, ROLE_XXX 일치하는지 확인
+- RoleHierarchyVoter : 계층형 Role 지원
+
+## Custom AccessDecisionManager
+- <code>RoleHierarchyImpl</code> 객체에 Role 계층을 설정
+
+```java
+public AccessDecisionManager accessDecisionManager() {
+    RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+    roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+
+    DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
+    handler.setRoleHierarchy(roleHierarchy);
+
+    WebExpressionVoter webExpressionVoter = new WebExpressionVoter();
+    webExpressionVoter.setExpressionHandler(handler);
+
+    List<AccessDecisionVoter<? extends Object>> voters = Arrays.asList(webExpressionVoter);
+    return new AffirmativeBased(voters);
+}
+```
