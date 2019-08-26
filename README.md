@@ -370,3 +370,13 @@ WebAsyncManagerIntegrationFilter는 <code>SecurityContextCallableProcessingInter
 SecurityContext 정보를 저장한다.
 
 ![SecurityContextCallableProcessingInterceptor](https://user-images.githubusercontent.com/43853352/63701300-a8be4180-c85f-11e9-90a7-d086333d13eb.png)
+
+## @Async 서비스에서 SecurityContextHolder 공유
+- SecurityContextHolder 기본 전략은 <code>ThreadLocal</code>
+- @Async 서비스에서 SecurityContextHolder가 공유 되지 않는 문제가 발생함
+- SecurityContextHolder 전략을 다음 코드와 같이 바꾸면 쓰레드 계층 사이에서도 SecurityContextHolder 정보가
+공유된다
+
+```java
+SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+```
