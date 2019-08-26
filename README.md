@@ -334,3 +334,39 @@ public void configure(WebSecurity web) {
 접속하게 되면 다음과 같이 스프링 필터를 적용하지 않고 바로 정적 자원을 전달한다.
 
 ![after_ignoring](https://user-images.githubusercontent.com/43853352/63650953-4b58c080-c78b-11e9-829e-ca42925c6add.png)
+
+## WebAsyncManagerIntegrationFilter
+스프링 MVC의 Async 기능을 사용할 때도 SecurityContext를 공유하도록 도와주는 필터
+
+- PreProcess: SecurityContext를 설정한다.
+- Callable: 비록 다른 쓰레드지만 그 안에서는 동일한 SecurityContext를 참조할 수 있다.
+- PostProcess: SecurityContext를 정리(clean up)한다.
+
+MVC 요청이 들어오는 쓰레드 작업을 완료하고 나서도 <code>SecurityContextHolder</code>에서는 사용자 정보를 동일하게 얻을 수 있다. 그 역할을
+<b>WebAsyncManagerIntegrationFilter</b>가 수행한다.
+
+```java
+@Controller
+public class SampleController {
+
+    @GetMapping("/async-handler")
+    @ResponseBody
+    public Callable<String> asyncHandler() {
+        // http-nio-8080-exec 쓰레드
+        SecurityLogger.log("MVC");
+
+        return () -> {
+            // task-1 쓰레드
+            SecurityLogger.log("Callable");
+            return "Async Handler";
+        };
+    }
+    
+}
+```
+
+### SecurityContextCallableProcessingInterceptor
+WebAsyncManagerIntegrationFilter는 <code>SecurityContextCallableProcessingInterceptor</code>를 사용해서 SecurityContextHolder에
+SecurityContext 정보를 저장한다.
+
+![SecurityContextCallableProcessingInterceptor](https://user-images.githubusercontent.com/43853352/63701300-a8be4180-c85f-11e9-90a7-d086333d13eb.png)
