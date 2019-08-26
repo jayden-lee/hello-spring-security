@@ -380,3 +380,8 @@ SecurityContext 정보를 저장한다.
 ```java
 SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 ```
+
+## SecurityContextPersistenceFilter
+<code>SecurityContextRepository</code>를 사용해서 기존의 SecurityContext 정보를 읽어오거나 초기화한다
+- 기본으로 사용하는 전략은 <b>HTTP Session</b> 사용 (HttpSessionSecurityContextRepository)
+- Spring-Session과 연동하여 세션 클러스터를 구현할 수 있다
