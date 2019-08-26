@@ -311,3 +311,26 @@ public AccessDecisionManager accessDecisionManager() {
 ### AccessDeniedException
 - 익명 사용자라면 AuthenticationEntryPoint 실행 (로그인 페이지로 이동)
 - 익명 사용자가 아니라면 AccessDeniedHandler에게 위임
+
+## 스프링 시큐리티 적용 무시하기 (ignoring)
+인증이 필요없는 페이지를 접속할 때 favicon.ico와 같은 정적 자원을 요청하는 경우에 FilterChainProxy 리스트의 필터를 타게 된다. 아래 이미지에서
+favicon.ico를 요청하면 DefaultLoginPageGeneratingFilter 필터가 인증을 위해서 login 요청을 다시 하게된다.
+
+![before_ignoring](https://user-images.githubusercontent.com/43853352/63650945-2fedb580-c78b-11e9-84b2-7421c344025e.png)
+
+이러한 정적 자원을 필터에서 제외하기 위해서는 다음과 같이 WebSecurity에 <code>ignoring</code>을 설정해야 한다. CommonLocations은 5개의 자원에
+대해 필터를 무시하도록 한다.
+
+```java
+@Override
+public void configure(WebSecurity web) {
+    web.ignoring().requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+}
+```
+
+![StaticResourceLocation](https://user-images.githubusercontent.com/43853352/63651001-c7530880-c78b-11e9-8d89-dfe20b5ea380.png)
+
+<code>WebSecurityConfigurerAdapter</code> 상속 받은 클래스에서 정적 자원을 무시하도록 설정하고, 다시 인증이 필요없는 페이지를
+접속하게 되면 다음과 같이 스프링 필터를 적용하지 않고 바로 정적 자원을 전달한다.
+
+![after_ignoring](https://user-images.githubusercontent.com/43853352/63650953-4b58c080-c78b-11e9-829e-ca42925c6add.png)
