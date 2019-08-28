@@ -395,3 +395,55 @@ SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHRE
 - XFrameOptionsHeaderWriter : clickjacking 방어.
 
 ![response-headers](https://user-images.githubusercontent.com/43853352/63869293-d687bf80-c9f2-11e9-9eb7-f98f0eb341dc.png)
+
+## CsrfFilter
+CSRF 어택 방지 필터
+- 인증된 유저의 계정을 사용해서 악의적인 변경 요청을 만들어 보내는 기법
+- 의도한 사용자만 리소스를 변경할 수 있도록 허용하는 필터
+- CSRF 토큰을 사용하여 체크
+
+### CsrfFilter Token
+form 형식에 hidden 타입으로 csrf 토큰 값이 포함되어 있다
+
+![csrf-token](https://user-images.githubusercontent.com/43853352/63873583-d5f32700-c9fa-11e9-9e60-065040ce5112.png)
+
+Postman을 이용해서 <code>/signup</code> POST 요청을 보내면, <b>401 Unauthorized</b> 에러가 발생한다. 이유는 csrf 토큰 값이 없어서 폼 인증이 되지 않기
+때문에 발생한다.
+
+![csrf-401-code](https://user-images.githubusercontent.com/43853352/63873845-4c902480-c9fb-11e9-9055-11b725c73b24.png)
+
+### CsrfFilter Test
+```java
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
+public class SignUpControllerTest {
+
+    @Autowired
+    MockMvc mockMvc;
+
+    // SignUp Get 요청
+    @Test
+    public void signUpForm() throws Exception {
+        mockMvc.perform(get("/signup"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("_csrf")));
+    }
+
+    // SignUp Post 요청, csrf 토큰을 포함 
+    @Test
+    public void processSignUp() throws Exception {
+        mockMvc.perform(post("/signup")
+                .param("username", "jayden")
+                .param("password", "123")
+                .with(csrf()))
+                .andDo(print())
+                .andExpect(status().is3xxRedirection());
+    }
+}
+```
+
+### CsrfFilter 비활성화
+```java
+http.csrf().disable();
+```

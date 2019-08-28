@@ -3,6 +3,7 @@ package com.jayden.tutorial.springsecurity.domain.account;
 import lombok.Getter;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
@@ -26,8 +27,8 @@ public class Account {
         this.username = username;
     }
 
-    private void setEncodePassword(String password) {
-        this.password = password;
+    private void setEncodePassword(String encodePassword) {
+        this.password = encodePassword;
     }
 
     private void setRole(String role) {
@@ -48,6 +49,10 @@ public class Account {
                 .append("username", username)
                 .append("role", role)
                 .build();
+    }
+
+    public void changeRole(String role) {
+        setRole(role);
     }
 
 }
