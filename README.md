@@ -385,3 +385,13 @@ SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHRE
 <code>SecurityContextRepository</code>를 사용해서 기존의 SecurityContext 정보를 읽어오거나 초기화한다
 - 기본으로 사용하는 전략은 <b>HTTP Session</b> 사용 (HttpSessionSecurityContextRepository)
 - Spring-Session과 연동하여 세션 클러스터를 구현할 수 있다
+
+## HeaderWriterFilter
+응답 헤더에 시큐리티 관련 헤더를 추가해주는 필터
+- XContentTypeOptionsHeaderWriter : 마임 타입 스니핑 방어.
+- XXssProtectionHeaderWriter : 브라우저에 내장된 XSS 필터 적용.
+- CacheControlHeadersWriter : 캐시 히스토리 취약점 방어.
+- HstsHeaderWriter : HTTPS로만 소통하도록 강제.
+- XFrameOptionsHeaderWriter : clickjacking 방어.
+
+![response-headers](https://user-images.githubusercontent.com/43853352/63869293-d687bf80-c9f2-11e9-9eb7-f98f0eb341dc.png)
