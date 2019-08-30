@@ -43,7 +43,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .mvcMatchers("/", "/login", "/info", "/signup").permitAll()
+                .mvcMatchers("/", "/info", "/signup").permitAll()
                 .mvcMatchers("/admin").hasRole("ADMIN")
                 .mvcMatchers("/user").hasRole("USER")
                 .anyRequest().authenticated()
@@ -53,8 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.httpBasic();
 
         http.formLogin()
-                .usernameParameter("app_username")
-                .passwordParameter("app_password");
+                .loginPage("/login")
+                .permitAll();
 
         http.logout()
                 .logoutUrl("/logout")
