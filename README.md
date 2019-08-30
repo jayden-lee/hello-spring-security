@@ -465,3 +465,27 @@ http.csrf().disable();
 - 사용자가 폼에 입력한 정보를 토대로 Authentication 객체를 생성하고 <code>AuthenticationManager</code>를 사용하여 인증을 시도한다
 - AuthenticationManager(ProviderManager)는 여러 <code>AuthenticationProvider</code>를 사용하여 인증을 시도하는데, 그 중 <code>DaoAuthenticationProvider</code>는
 UserDetailsService를 사용하여 UserDetails 정보를 가져와서 사용자가 입력한 정보와 동일한지 비교한다
+
+## DefaultLoginPageGeneratingFilter
+기본 로그인 페이지를 생성하는 필터
+
+### 사용자 이름과 비밀번호 파라미터 이름 변경
+
+```java
+http.formLogin()
+        .usernameParameter("app_username")
+        .passwordParameter("app_password");
+```
+
+![DefaultLoginPageGeneratingFilter](https://user-images.githubusercontent.com/43853352/64032534-a15fa680-cb85-11e9-9187-6220150cb1f2.png)
+
+### 커스텀 로그인 페이지
+커스텀 로그인 페이지를 등록하면 FilterChainProxy에서 <code>DefaultLoginPageGeneratingFilter</code>와 <code>DefaultLogoutPageGeneratingFilter</code> 두 필터가 제외됨
+
+```java
+http.formLogin()
+        .loginPage("/login");
+```
+ 
+## DefaultLogoutPageGeneratingFilter
+기본 로그아웃 페이지를 생성하는 필터
