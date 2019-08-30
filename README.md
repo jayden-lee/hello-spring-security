@@ -447,3 +447,14 @@ public class SignUpControllerTest {
 ```java
 http.csrf().disable();
 ```
+
+## LogoutFilter
+여러 LogoutHanlder를 사용하여 로그아웃시 필요한 작업을 수행한다. 그리고 <code>LogoutSuccessHandler</code>를 사용해서
+로그아웃 후처리를 한다.
+
+### Default LogoutHanlder
+- CsrfLogoutHandler
+- SecurityContextLogoutHandler
+
+### Default LogoutSuccessHandler
+- SimpleUrlLogoutSuccessHandler
