@@ -458,3 +458,10 @@ http.csrf().disable();
 
 ### Default LogoutSuccessHandler
 - SimpleUrlLogoutSuccessHandler
+
+## UsernamePasswordAuthenticationFilter
+폼 로그인을 처리하는 인증 필터
+
+- 사용자가 폼에 입력한 정보를 토대로 Authentication 객체를 생성하고 <code>AuthenticationManager</code>를 사용하여 인증을 시도한다
+- AuthenticationManager(ProviderManager)는 여러 <code>AuthenticationProvider</code>를 사용하여 인증을 시도하는데, 그 중 <code>DaoAuthenticationProvider</code>는
+UserDetailsService를 사용하여 UserDetails 정보를 가져와서 사용자가 입력한 정보와 동일한지 비교한다
