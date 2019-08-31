@@ -539,3 +539,13 @@ protected void configure(HttpSecurity http) throws Exception {
     SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
 }
 ```
+
+## BasicAuthenticationFilter
+- Http Basic 인증을 지원하는 필터
+- 요청 헤더에 아이디와 패스워드를 보내면 브라우저 또는 서버가 그 값을 읽어서 인증하는 방식
+- 정보는 Base64 인코딩 되어 보내지고 읽을 때 다시 디코딩해서 값을 읽는다
+- 스니핑하면 요청 정보를 쉽게 취득하는 위험이 있기 때문에 HTTPS를 사용할 것을 권장
+
+```java
+http.httpBasic();
+```
