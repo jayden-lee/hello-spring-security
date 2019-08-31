@@ -593,3 +593,13 @@ public class RequestCacheAwareFilter extends GenericFilterBean {
 - HttpServletRequest#login(String, String)
 - HttpServletRequest#logout()
 - AsyncContext#start(Runnable)
+
+## AnonymousAuthenticationFilter
+SecurityContext에 Authentication이 null 값이면, 익명 Authentication을 생성해서 넣어준다. Authentication이 null 값이 아니면,
+아무일도 하지 않는 필터이다. ([null object pattern](https://www.geeksforgeeks.org/null-object-design-pattern/))
+
+![AnonymousAuthenticationFilter_dofilter](https://user-images.githubusercontent.com/43853352/64066511-be63aa80-cc55-11e9-8350-318e4890474f.png)
+
+스프링 시큐리티는 별도의 설정이 없어도 AnonymousUser를 기본적으로 생성한다. Principal은 <b>anonymousUser</b>이고 권한은 <b>ROLE_ANONYMOUS</b>로 설정한다.
+
+![AnonymousAuthenticationFilter](https://user-images.githubusercontent.com/43853352/64066496-7775b500-cc55-11e9-9efa-333157e58e7b.png)
