@@ -491,3 +491,49 @@ http.formLogin()
 기본 로그아웃 페이지를 생성하는 필터
 
 ## 로그인/로그아웃 폼 커스터마이징
+로그인/로그아웃 폼 페이지를 커스터마이징 하기 위해서 <code>LogInOutController</code>를 생성한다. 이 컨트롤러는 Get 요청으로 로그인/로그아웃
+페이지를 반환한다.
+
+```java
+@Controller
+public class LogInOutController {
+
+    @GetMapping("/login")
+    public String loginForm() {
+        return "/login";
+    }
+
+    @GetMapping("/logout")
+    public String logoutForm() {
+        return "/logout";
+    }
+
+}
+```
+
+<code>SpirngSecurity</code> 설정에서 로그인 폼 페이지 URL과 로그아웃 URL을 설정한다.
+
+```java
+@Override
+protected void configure(HttpSecurity http) throws Exception {
+    http.authorizeRequests()
+            .mvcMatchers("/", "/info", "/signup").permitAll()
+            .mvcMatchers("/admin").hasRole("ADMIN")
+            .mvcMatchers("/user").hasRole("USER")
+            .anyRequest().authenticated()
+            .accessDecisionManager(accessDecisionManager());
+
+
+    http.httpBasic();
+
+    http.formLogin()
+            .loginPage("/login")
+            .permitAll();
+
+    http.logout()
+            .logoutUrl("/logout")
+            .logoutSuccessUrl("/");
+
+    SecurityContextHolder.setStrategyName(SecurityContextHolder.MODE_INHERITABLETHREADLOCAL);
+}
+```
