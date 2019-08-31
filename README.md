@@ -585,3 +585,11 @@ public class RequestCacheAwareFilter extends GenericFilterBean {
 
 }
 ```
+
+## SecurityContextHolderAwareRequestFilter
+시큐리티 관련 서블릿 API를 구현해주는 필터
+
+- HttpServletRequest#authenticate(HttpServletResponse)
+- HttpServletRequest#login(String, String)
+- HttpServletRequest#logout()
+- AsyncContext#start(Runnable)
