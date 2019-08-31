@@ -549,3 +549,39 @@ protected void configure(HttpSecurity http) throws Exception {
 ```java
 http.httpBasic();
 ```
+
+## RequestCacheAwareFilter
+현재 요청과 관련 있는 캐시된 요청이 있는지 찾아서 적용하는 필터
+- 캐시된 요청이 없다면, 현재 요청 처리
+- 캐시된 요청이 있다면, 캐시된 요청 처리
+
+> 대시보드(로그인이 필요한 페이지) 페이지를 접속하려고 하면 로그인 페이지로 이동한다. 로그인 페이지에서 로그인 인증을 수행하고 나면,
+<code>RequestCacheAwareFilter</code>에서 캐시한 요청(대시보드 페이지로 이동하려는 요청)을 수행한다.  
+
+```java
+public class RequestCacheAwareFilter extends GenericFilterBean {
+
+	private RequestCache requestCache;
+
+	public RequestCacheAwareFilter() {
+		this(new HttpSessionRequestCache());
+	}
+
+	public RequestCacheAwareFilter(RequestCache requestCache) {
+		Assert.notNull(requestCache, "requestCache cannot be null");
+		this.requestCache = requestCache;
+	}
+
+	public void doFilter(ServletRequest request, ServletResponse response,
+			FilterChain chain) throws IOException, ServletException {
+
+		HttpServletRequest wrappedSavedRequest = requestCache.getMatchingRequest(
+				(HttpServletRequest) request, (HttpServletResponse) response);
+
+        // 캐시된 요청이 있는지 체크하고 현재 요청을 처리할지 캐시된 요청을 처리할지 결정
+		chain.doFilter(wrappedSavedRequest == null ? request : wrappedSavedRequest,
+				response);
+	}
+
+}
+```
