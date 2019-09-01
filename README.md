@@ -626,3 +626,8 @@ SecurityContext에 Authentication이 null 값이면, 익명 Authentication을 �
     2. NEVER
     3. IF_REQUIRED
     4. STATELESS
+    
+## ExceptionTranslationFilter
+- <code>try-catch</code> 구문으로 감싸고 <code>FilterSecurityInterceptor</code>를 처리한다
+- FilterSecurityInterceptor는 AccessDecisionManager를 이용해서 인가 처리를 함
+- AuthenticationEntryPoint, AccessDeniedException 예외를 처리함
