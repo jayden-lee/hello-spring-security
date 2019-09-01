@@ -603,3 +603,26 @@ SecurityContext에 Authentication이 null 값이면, 익명 Authentication을 �
 스프링 시큐리티는 별도의 설정이 없어도 AnonymousUser를 기본적으로 생성한다. Principal은 <b>anonymousUser</b>이고 권한은 <b>ROLE_ANONYMOUS</b>로 설정한다.
 
 ![AnonymousAuthenticationFilter](https://user-images.githubusercontent.com/43853352/64066496-7775b500-cc55-11e9-9efa-333157e58e7b.png)
+
+## SessionManagementFilter
+- 세션 변조 방지 전략 설정
+    - 세션 변조 방지 전략으로 <b>changeSessionId</b>로 설정
+    ```java
+    http.sessionManagement()
+            .sessionFixation()
+            .changeSessionId();
+    ```
+- 유효하지 않은 세션을 리다이렉트 시킬 URL 설정
+- 동시성 제어
+    - 세션 개수 제어
+    - 추가 로그인을 막을지 여부 (기본값은 false)
+    ```java
+    http.sessionManagement()
+            .maximumSessions(1)
+            .maxSessionsPreventsLogin(true);
+    ```
+- 세션 생성 전략
+    1. ALWAYS
+    2. NEVER
+    3. IF_REQUIRED
+    4. STATELESS
