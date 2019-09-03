@@ -675,3 +675,6 @@ http.rememberMe()
 <code>SecurityContextHolder</code>에 넣어준다.
 
 ![RememberMeAuthenticationFilter](https://user-images.githubusercontent.com/43853352/64181175-fb6fad00-cea0-11e9-8319-24823498f3c1.png)
+
+> 크롬 웹 브라우저에서 현재 접속한 페이지의 쿠키 정보를 쉽게 확인할 수 있는 플러그인으로 [EditThisCookie](https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg?hl=ko)를
+설치해서 사용했다.
