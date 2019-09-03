@@ -629,5 +629,20 @@ SecurityContext에 Authentication이 null 값이면, 익명 Authentication을 �
     
 ## ExceptionTranslationFilter
 - <code>try-catch</code> 구문으로 감싸고 <code>FilterSecurityInterceptor</code>를 처리한다
-- FilterSecurityInterceptor는 AccessDecisionManager를 이용해서 인가 처리를 함
+- FilterSecurityInterceptor는 <code>AccessDecisionManager</code>를 이용해서 인가 처리를 함
 - AuthenticationEntryPoint, AccessDeniedException 예외를 처리함
+
+## FilterSecurityInterceptor
+- Http 리소스 시큐리티 처리를 담당하는 필터
+- <code>AccessDecisionManager</code>를 사용하여 인가를 처리
+
+```java
+http.authorizeRequests()
+        .mvcMatchers("/", "/info", "/signup").permitAll()
+        .mvcMatchers("/admin").hasRole("ADMIN")
+        .mvcMatchers("/user").hasRole("USER")
+        .anyRequest().authenticated()
+        .accessDecisionManager(accessDecisionManager());
+```
+
+![security-filter-list](https://user-images.githubusercontent.com/43853352/64179431-1f7dbf00-ce9e-11e9-8a1d-a8265300ab56.png)
