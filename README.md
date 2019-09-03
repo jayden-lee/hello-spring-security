@@ -706,3 +706,5 @@ public class LoggingFilter extends GenericFilterBean {
 ```java
 http.addFilterBefore(new LoggingFilter(), WebAsyncManagerIntegrationFilter.class);
 ```
+
+![loggingfilter](https://user-images.githubusercontent.com/43853352/64186008-134b2f00-cea9-11e9-84af-e423886d04e9.png)
