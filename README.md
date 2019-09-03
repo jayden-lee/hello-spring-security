@@ -646,3 +646,32 @@ http.authorizeRequests()
 ```
 
 ![security-filter-list](https://user-images.githubusercontent.com/43853352/64179431-1f7dbf00-ce9e-11e9-8a1d-a8265300ab56.png)
+
+## RememberMeAuthenticationFilter
+- 세션이 사라지거나 만료가 되더라도 쿠키 또는 DB를 사용하여 저장된 토큰 기반으로 인증을 지원하는 필터
+
+### RememberMe 설정
+페이지에 접속하면 서버에서 세션이 생성되고 웹 브라우저 쿠키에 세션 아이디 정보가 담긴다. 로그인 하고 나면 서버는 해당 세션을 인증된 세션으로 취급한다.
+
+사용자가 웹 브라우저 쿠키에서 세션 아이디를 삭제하게 되면, 인증된 세션이 아니기 때문에 서버는 다시 로그인 창으로 리다이렉트 된다.
+
+세션 아이디를 삭제하면 <code>SecurityContextHolder</code>에서 인증 정보를 가져올 수 없기 때문에 서버는 인증되지 않은 사용자로 판단하고 인증이 필요한 페이지의 접속을 막는다.
+
+![session-id](https://user-images.githubusercontent.com/43853352/64179984-fe699e00-ce9e-11e9-9545-ab9d357ff7bf.png)
+
+다음과 같이 <code>rememberMe</code> 설정을 하고 로그인할 때, remember-me 파라미터를 넘기면 remember-me 쿠키 정보가 생기게 된다.
+remember-me 쿠키에는 사용자 이름과 유효 기간 정보를 포함하고 있다.
+
+```java
+http.rememberMe()
+        .userDetailsService(accountService)
+        .key("remember-me");
+```
+
+![remember-me](https://user-images.githubusercontent.com/43853352/64180534-e8a8a880-ce9f-11e9-81cd-def073030818.png)
+
+앞에서 한 것처럼 다시 세션 아이디를 삭제하고 나서 다시 인증이 필요한 페이지를 요청하면 로그인 페이지로 리다이렉트 하지 않는다. 필터 체인 목록에서
+<code>RememberMeAuthenticationFilter</code>가 <b>RememberMeAuthenticationToken</b> 정보를 이용해서 인증하고, 인증된 정보를 다시
+<code>SecurityContextHolder</code>에 넣어준다.
+
+![RememberMeAuthenticationFilter](https://user-images.githubusercontent.com/43853352/64181175-fb6fad00-cea0-11e9-8319-24823498f3c1.png)

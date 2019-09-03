@@ -1,5 +1,7 @@
 package com.jayden.tutorial.springsecurity.config;
 
+import com.jayden.tutorial.springsecurity.domain.account.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
@@ -20,6 +22,9 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+
+    @Autowired
+    private AccountService accountService;
 
     public AccessDecisionManager accessDecisionManager() {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
@@ -55,6 +60,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.formLogin()
                 .loginPage("/login")
                 .permitAll();
+
+        http.rememberMe()
+                .userDetailsService(accountService)
+                .key("remember-me");
 
         http.logout()
                 .logoutUrl("/logout")
