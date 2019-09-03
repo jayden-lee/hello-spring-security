@@ -678,3 +678,31 @@ http.rememberMe()
 
 > 크롬 웹 브라우저에서 현재 접속한 페이지의 쿠키 정보를 쉽게 확인할 수 있는 플러그인으로 [EditThisCookie](https://chrome.google.com/webstore/detail/editthiscookie/fngmhnnpilhplaeedifhccceomclgfbg?hl=ko)를
 설치해서 사용했다.
+
+## 커스텀 필터 추가하기
+Filter를 생성하는 것은 여러 방법이 있지만 이번에 추가하는 LoggingFilter는 <code>GenericFilterBean</code> 클래스를 상속 받아서 구현하도록 한다. <code>GenericFilterBean</code> 클래스에는 기본적인 설정이 되어 있기 때문에
+상속 받은 클래스가 <b>doFilter</b> 메서드만 오버라이드 하면 된다.
+
+```java
+public class LoggingFilter extends GenericFilterBean {
+
+    private Logger logger = LoggerFactory.getLogger(this.getClass());
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        StopWatch stopWatch = new StopWatch();
+        stopWatch.start();
+
+        chain.doFilter(request, response);
+
+        stopWatch.stop();
+        logger.info(stopWatch.prettyPrint());
+    }
+}
+```
+
+새로 생성한 <code>LoggingFilter</code> 필터를 필터 목록에서 원하는 위치로 설정할 수 있다. <code>WebAsyncManagerIntegrationFilter</code> 필터는 필터 목록에서 가장 첫 번째에 위치하는 필터이다.
+
+```java
+http.addFilterBefore(new LoggingFilter(), WebAsyncManagerIntegrationFilter.class);
+```

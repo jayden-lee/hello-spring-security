@@ -1,6 +1,7 @@
 package com.jayden.tutorial.springsecurity.config;
 
 import com.jayden.tutorial.springsecurity.domain.account.AccountService;
+import com.jayden.tutorial.springsecurity.filter.LoggingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Configuration;
@@ -15,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.security.web.access.expression.WebExpressionVoter;
+import org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+        http.addFilterBefore(new LoggingFilter(), WebAsyncManagerIntegrationFilter.class);
+
         http.authorizeRequests()
                 .mvcMatchers("/", "/info", "/signup").permitAll()
                 .mvcMatchers("/admin").hasRole("ADMIN")
