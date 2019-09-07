@@ -708,3 +708,32 @@ http.addFilterBefore(new LoggingFilter(), WebAsyncManagerIntegrationFilter.class
 ```
 
 ![loggingfilter](https://user-images.githubusercontent.com/43853352/64186008-134b2f00-cea9-11e9-84af-e423886d04e9.png)
+
+## 메서드 시큐리티
+- 스프링 시큐리티 기능을 웹 또는 데스크탑 애플리케이션에서도 사용할 수 있도록 도와주는 기능
+- 메서드 시큐리티를 사용하기 위해서는 다음과 같은 설정 클래스를 생성해야 한다
+
+```java
+@Configuration
+@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true, jsr250Enabled = true)
+public class MethodSecurity {
+    
+}
+```
+
+- 권한에 따라 특정 메서드를 실행 유무를 설정하고 싶으면 <code>@Secured</code> 애노테이션과 함께 <b>ROLE_USER</b> 이름을 추가한다 
+- <code>@Secured</code>, <code>@RolesAllowed</code>, <code>PreAuthorize</code> 애노테이션들은 dashboard 메서드를 호출하기 전에 권한 검사를 수행한다
+- <codE>@PostAuthorize</code> 애노테이션은 dashboard 메서드를 실행한 이후에 권한을 체크한다
+ 
+```java
+@Secured("ROLE_USER")
+@RolesAllowed("ROLE_USER")
+@PreAuthorize("hasRole(USER)")
+public void dashboard() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+    System.out.println("================");
+    System.out.println(authentication);
+    System.out.println(authentication.getName());
+}
+```
