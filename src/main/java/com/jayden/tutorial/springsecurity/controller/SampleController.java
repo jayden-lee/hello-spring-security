@@ -1,10 +1,13 @@
 package com.jayden.tutorial.springsecurity.controller;
 
 import com.jayden.tutorial.springsecurity.common.SecurityLogger;
+import com.jayden.tutorial.springsecurity.domain.account.Account;
 import com.jayden.tutorial.springsecurity.domain.account.AccountContext;
+import com.jayden.tutorial.springsecurity.domain.account.UserAccount;
 import com.jayden.tutorial.springsecurity.domain.account.infra.AccountRepository;
 import com.jayden.tutorial.springsecurity.domain.sample.SampleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,11 +27,11 @@ public class SampleController {
     private AccountRepository accountRepository;
 
     @GetMapping(value = "/")
-    public String index(Model model, Principal principal) {
-        if (principal == null) {
+    public String index(Model model, @AuthenticationPrincipal UserAccount userAccount) {
+        if (userAccount == null) {
             model.addAttribute("message", "Hello Spring Security");
         } else {
-            model.addAttribute("message", "Hello " + principal.getName());
+            model.addAttribute("message", "Hello " + userAccount.getUsername());
         }
         return "index";
     }

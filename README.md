@@ -737,3 +737,77 @@ public void dashboard() {
     System.out.println(authentication.getName());
 }
 ```
+
+## @AuthenticationPrincipal
+> 기존에 Principal 정보를 얻으려면 다음과 같은 두 가지 방법을 사용했다. 첫번째 방법을 통해 얻은 Principal 객체에서는
+사용자 이름 정보만 가져올 수 있는 단점이 있다. 두 번째 방법은 우리가 선언한 도메인 타입의 클래스로 변환하면 이름, 역할, 비밀번호 정보를
+얻을 수 있다.
+
+1. Argument에 Principal를 추가
+    ```java
+    @GetMapping(value = "/dashboard")
+    public String dashboard(Model model, Principal principal) {
+        model.addAttribute("message", "Hello " + principal.getName());
+        AccountContext.setAccount(accountRepository.findByUsername(principal.getName()));
+        sampleService.dashboard();
+        return "dashboard";
+    }
+    ```
+
+2. SecurityContextHolder에서 가져오는 방법
+    ```java
+    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    ```
+
+이번에 살펴볼 <code>@AuthenticationPrincipal</code> 애노테이션을 사용하면 우리가 선언한 도메인 타입의 Principal 정보를
+매개변수로 받을 수 있다. 애노테이션을 확인하고 <code>ArgumentResolver</code>가 현재 로그인한 사용자 정보를 만들어서 넣어준다.
+
+```java
+@GetMapping(value = "/")
+public String index(Model model, @AuthenticationPrincipal UserAccount userAccount) {
+    if (userAccount == null) {
+        model.addAttribute("message", "Hello Spring Security");
+    } else {
+        model.addAttribute("message", "Hello " + userAccount.getUsername());
+    }
+    return "index";
+}
+```
+
+UserAccount 클래스는 User 클래스를 상속 받아 구현한다.
+```java
+@Getter
+public class UserAccount extends User {
+
+    private Account account;
+
+    public UserAccount(Account account) {
+        super(account.getUsername(), account.getPassword(), List.of(new SimpleGrantedAuthority("ROLE_" + account.getRole())));
+        this.account = account;
+    }
+
+}
+```
+
+UserAccount 객체에서 Account 정보만 가져오고 싶을 때는 다음과 같은 방법을 사용한다
+
+```java
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.PARAMETER)
+@AuthenticationPrincipal(expression = "#this == 'anonymousUser' ? null : account")
+public @interface CurrentUser {
+}
+```
+
+```java
+@GetMapping(value = "/")
+public String index(Model model, @CurrentUser Account account) {
+    if (account == null) {
+        model.addAttribute("message", "Hello Spring Security");
+    } else {
+        model.addAttribute("message", "Hello " + account.getUsername());
+    }
+    return "index";
+}
+```
+
